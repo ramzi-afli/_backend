@@ -1,6 +1,7 @@
 package zc.backend.modles;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,5 +28,6 @@ public class Users {
     @OneToOne(fetch = FetchType.LAZY)
     private  Role role ;
     @OneToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     private  List <Event> events =new ArrayList<>();
 }
