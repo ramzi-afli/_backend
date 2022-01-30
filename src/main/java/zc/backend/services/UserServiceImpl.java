@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import zc.backend.modles.Role;
 import zc.backend.modles.Users;
@@ -24,16 +25,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
    private final UserRepo userRepo;
    private  final RoleRepo  roleRepo ;
+    private final PasswordEncoder passwordEncoder;
    @Autowired
-   public  UserServiceImpl(UserRepo userRepo,RoleRepo roleRepo){
+   public  UserServiceImpl(UserRepo userRepo,RoleRepo roleRepo,PasswordEncoder passwordEncoder){
        this.userRepo=userRepo ;
        this.roleRepo=roleRepo;
+       this.passwordEncoder=passwordEncoder ;
    }
 
 
     @Override
     public Users saveUser(Users users) {
        log.info("saving new user {}",users.getName() );
+        users.setPassword(passwordEncoder.encode(users.getPassword()));
         return userRepo.save(users);
     }
 
@@ -74,9 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("user  is found  : {}" ,username);
         }
         Collection<SimpleGrantedAuthority> authorities =new ArrayList<SimpleGrantedAuthority>();
-        System.out.println(users.getRole());
         authorities.add( new  SimpleGrantedAuthority (users.getRole().getRoleName()));
-
         return new org.springframework.security.core.userdetails.User(users.getUsername(),users.getPassword(),authorities);
     }
 }

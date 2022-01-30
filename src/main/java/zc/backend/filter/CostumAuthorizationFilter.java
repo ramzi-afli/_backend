@@ -28,8 +28,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CostumAuthorizationFilter extends OncePerRequestFilter {
 
-    @Value("jwtscret")
-    private  String  jwtScret;
+
+
+    private  String  mySecret;
+    @Value("${jwt.secret}")
+    public void setSecret(String secret) {
+        this.mySecret = secret;
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getServletPath().equals("/api/login") ||request.getServletPath().equals("/api/token/refrech") ){
@@ -39,24 +44,18 @@ public class CostumAuthorizationFilter extends OncePerRequestFilter {
             if(authorizationHeader !=null && authorizationHeader.startsWith("Bearer ")){
                 try {
                     String token = authorizationHeader.substring("Bearer ".length() );
-                    Algorithm algorithm = Algorithm.HMAC256(jwtScret.getBytes());
+                    Algorithm algorithm = Algorithm.HMAC256("babamchaynayk".getBytes());
                     JWTVerifier  verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT=verifier.verify(token);
                     String username=decodedJWT.getSubject();
-
-                    String[] roles= decodedJWT.getClaim("roles").asArray(String.class);
+                    String roles= decodedJWT.getClaim("role").asString();
                     System.out.println(roles);
                     Collection<SimpleGrantedAuthority> authorities =new ArrayList<>();
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
-
+                    authorities.add(new SimpleGrantedAuthority("PUBLISHER"));
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken=new UsernamePasswordAuthenticationToken(username,null,authorities);
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                     filterChain.doFilter(request,response);
-
                 } catch (Exception exception) {
-
                     exception.printStackTrace();
                     log.error(" Error logging in : {}",exception.getMessage());
                     response.setHeader("error",exception.getMessage());

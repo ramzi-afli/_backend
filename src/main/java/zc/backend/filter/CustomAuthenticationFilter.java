@@ -28,13 +28,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Value("jwtscret")
-    private  String  jwtScret;
+
+
+
     private final AuthenticationManager authenticationManager ;
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager ) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager=authenticationManager;
     }
-
+    @Value("${jwt.secret}")
+    private   String  mySecret;
+    public void setSecret(String secret) {
+        this.mySecret = secret;
+    }
     @Override
 
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -49,14 +54,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
 
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication ) throws IOException, ServletException {
-
         User user =(User)authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256(jwtScret.getBytes());
+        Algorithm algorithm = Algorithm.HMAC256("babamchaynayk".getBytes());
         String acces_token= JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("role",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
         String refrech_token= JWT.create()
                 .withSubject(user.getUsername())
