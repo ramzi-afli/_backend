@@ -9,6 +9,8 @@ import lombok.NonNull;
 import  java.util.* ;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -20,11 +22,14 @@ public class Users {
     private Integer id ;
     @NonNull
     @Column(name ="name" )
+    @Size(min=4 )
     private  String name;
     @NonNull
     @Column(name = "email")
+    @Email
     private   String username ;
     @NonNull
+    @Size(min = 8)
     private  String password;
     @OneToOne(fetch = FetchType.EAGER)
     private  Role role ;

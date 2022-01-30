@@ -40,7 +40,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public void setSecret(String secret) {
         this.mySecret = secret;
     }
+
     @Override
+
 
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username= request.getParameter("username");
@@ -52,6 +54,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     }
 
     @Override
+
 
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication ) throws IOException, ServletException {
         User user =(User)authentication.getPrincipal();
