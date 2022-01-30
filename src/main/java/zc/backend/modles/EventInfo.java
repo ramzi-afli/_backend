@@ -23,6 +23,7 @@ public class EventInfo {
     private Double attitude ;
     @NonNull
     private  Double longitude;
+    private  String eventLogo ;
     @JsonFormat( pattern= "yyyy/mm/dd/hh")
     private Date  eventDate ;
 }

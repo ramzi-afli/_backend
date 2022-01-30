@@ -16,6 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Users {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id ;
     @NonNull
     @Column(name ="name" )
@@ -25,9 +26,9 @@ public class Users {
     private   String username ;
     @NonNull
     private  String password;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private  Role role ;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     @JsonIgnore
     private  List <Event> events =new ArrayList<>();
 }
