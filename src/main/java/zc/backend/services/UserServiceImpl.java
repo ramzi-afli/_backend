@@ -12,19 +12,20 @@ import zc.backend.modles.Role;
 import zc.backend.modles.Users;
 import zc.backend.repository.RoleRepo;
 import zc.backend.repository.UserRepo;
-
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 @Service
 @Transactional
 @Slf4j
+
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-   private final UserRepo userRepo;
-   private  final RoleRepo  roleRepo ;
+    private final UserRepo userRepo;
+    private  final RoleRepo  roleRepo ;
     private final PasswordEncoder passwordEncoder;
    @Autowired
    public  UserServiceImpl(UserRepo userRepo,RoleRepo roleRepo,PasswordEncoder passwordEncoder){

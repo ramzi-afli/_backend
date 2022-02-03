@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/api/user",  "/api/** ","/api/user/addtoUser","/api/event/*","/api/event/eventing/*");
+                .antMatchers("/api/user",  "/api/feedback","/api/** ","/api/user/addtoUser","/api/event/*","/api/event/eventing/*");
 
     }
     @Bean

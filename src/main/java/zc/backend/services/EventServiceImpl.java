@@ -49,6 +49,7 @@ public class EventServiceImpl implements  EventService{
     @Override
     public void assignInfoToEvent(String   eventName, EventInfo eventInfo) {
            Event event=eventRepo.findByEventName(eventName) ;
+           log.info(event.toString());
            event.getInfoList().add(eventInfo);
     }
 

@@ -52,25 +52,24 @@ public class UserController {
     }
 
     @PostMapping("")
-    public  ResponseEntity<Users> saveUser(@RequestBody Users users){
+       public  ResponseEntity<Users> saveUser(@RequestBody Users users){
         return ResponseEntity.ok(userService.saveUser(users));
     }
 
       @PostMapping("/role")
-    public  ResponseEntity<Role> saveRole(@RequestBody Role  role){
+        public  ResponseEntity<Role> saveRole(@RequestBody Role  role){
         return  ResponseEntity.ok(userService.saveRole(role));
       }
 
-
-        @PostMapping("/addtoUser")
+      @PostMapping("/addtoUser")
         public  ResponseEntity<?> addRoleToUser( @RequestBody RoleUser roleUser){
           userService.addRoleToUser(roleUser.getUserName(),roleUser.getRoleName()) ;
           return ResponseEntity.ok("done ");
 
 
       }
-    @GetMapping("/token/refrech")
-    public  String   refrechToken(HttpServletRequest request , HttpServletResponse response) throws IOException {
+      @GetMapping("/token/refrech")
+        public  String   refrechToken(HttpServletRequest request , HttpServletResponse response) throws IOException {
         System.out.println("under here");
         String authorizationHeader =request.getHeader(AUTHORIZATION);
         if(authorizationHeader !=null && authorizationHeader.startsWith("Bearer ")){
