@@ -32,12 +32,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CostumAuthorizationFilter extends OncePerRequestFilter {
 
 
-    private  String  mySecret;
-    @Value("${jwt.secret}")
-    public void setSecret(String secret) {
-        this.mySecret = secret;
-    }
 
+    @Value("${jwt.secret}")
+    private   String  mySecret;
     @Override
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -48,7 +45,7 @@ public class CostumAuthorizationFilter extends OncePerRequestFilter {
             if(authorizationHeader !=null && authorizationHeader.startsWith("Bearer ")){
                 try {
                     String token = authorizationHeader.substring("Bearer ".length() );
-                    Algorithm algorithm = Algorithm.HMAC256("babamchaynayk".getBytes());
+                    Algorithm algorithm = Algorithm.HMAC256(mySecret.getBytes());
                     JWTVerifier  verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT=verifier.verify(token);
                     String username=decodedJWT.getSubject();
@@ -64,7 +61,6 @@ public class CostumAuthorizationFilter extends OncePerRequestFilter {
                     log.error(" Error logging in : {}",exception.getMessage());
                     response.setHeader("error",exception.getMessage());
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    //response.sendError(FORBIDEN.value());
                     Map<String,String> error =new HashMap<>();
                     error.put("error_message",exception.getMessage());
                     response.setContentType(APPLICATION_JSON_VALUE);

@@ -4,6 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,20 +27,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 @Slf4j
+@PropertySource(value = {"classpath:application.properties"})
+
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-
+    @Value("${jwt.secret}")
+    private   String  mySecret;
 
 
     private final AuthenticationManager authenticationManager ;
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager=authenticationManager;
     }
-    @Value("${jwt.secret}")
-    private   String  mySecret;
-    public void setSecret(String secret) {
-        this.mySecret = secret;
-    }
+
+
 
     @Override
 
@@ -58,7 +59,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication ) throws IOException, ServletException {
         User user =(User)authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("babamchaynayk".getBytes());
+        Algorithm algorithm = Algorithm.HMAC256(mySecret.getBytes());
         String acces_token= JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000))

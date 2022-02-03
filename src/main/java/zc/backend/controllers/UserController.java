@@ -34,12 +34,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 public class UserController {
     private  final UserServiceImpl userService ;
-    private  String  mySecret;
 
     @Value("${jwt.secret}")
-    public void setSecret(String secret) {
-        this.mySecret = secret;
-    }
+    private   String  mySecret;
     @Autowired
     public  UserController(UserServiceImpl userService){
         this.userService=userService ;
@@ -76,7 +73,7 @@ public class UserController {
 
             try {
                 String refrech_token = authorizationHeader.substring("Bearer ".length() );
-                Algorithm algorithm = Algorithm.HMAC256("babamchaynayk".getBytes());
+                Algorithm algorithm = Algorithm.HMAC256(mySecret.getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT=verifier.verify(refrech_token);
                 String username=decodedJWT.getSubject();
